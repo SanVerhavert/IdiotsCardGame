@@ -1,0 +1,17 @@
+{
+  "name": "idiotscardgame",
+  "version": "0.0.1",
+  "description": "This is a webpage in to play the card game Idiots",
+  "author": "San Verhavert",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "parcel": "latest"
+  },
+  "source": "IdiotsCardGame.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "browserslist": "> 0.5%, last 2 versions, Firefox ESR, not dead"
+}
