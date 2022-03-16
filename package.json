@@ -10,6 +10,8 @@
   "source": "IdiotsCardGame.html",
   "scripts": {
     "start": "parcel",
+    "dev:build": "parcel build --no-optimize --no-scope-hoist --no-content-hash",
+    "dev": "npm run dev:build && npm test",
     "build": "parcel build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
