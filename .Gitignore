@@ -1,0 +1,8 @@
+# .gitignore file
+
+# Node modules and related
+node_modules/
+package-lock.json
+
+# Parcel files
+.parcel-cache/
