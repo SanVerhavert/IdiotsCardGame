@@ -8,8 +8,10 @@
     "node": ">=16.0.0"
   },
   "devDependencies": {
+    "chai": "^4.3.6",
     "eslint": "^8.11.0",
-    "parcel": "latest"
+    "mocha": "^9.2.2",
+    "parcel": "^2.3.2"
   },
   "source": "IdiotsCardGame.html",
   "scripts": {
@@ -18,7 +20,7 @@
     "lint": "eslint",
     "dev": "npm run eslint && npm run dev:build && npm test",
     "build": "parcel build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "browserslist": "> 0.5%, last 2 versions, Firefox ESR, not dead"
 }
