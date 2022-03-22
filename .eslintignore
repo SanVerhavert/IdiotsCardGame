@@ -1,0 +1,11 @@
+# Ignore file for eslint
+
+ # node modulesand related
+node_modules/
+package-lock.json
+
+# Parcel files
+.parcel-cache/
+
+# dist
+dist/
