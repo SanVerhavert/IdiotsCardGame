@@ -10,11 +10,13 @@
   "devDependencies": {
     "chai": "^4.3.6",
     "eslint": "^8.11.0",
+    "eslint-plugin-import": "^2.25.4",
     "mocha": "^9.2.2",
     "mocha-eslint": "^7.0.0",
     "parcel": "^2.3.2"
   },
   "source": "IdiotsCardGame.html",
+  "type": "module",
   "scripts": {
     "start": "parcel",
     "dev:build": "parcel build --no-optimize --no-scope-hoist --no-content-hash",
