@@ -1,5 +1,5 @@
-var expect = require( "chai" ).expect;
-var lint = require( "mocha-eslint" );
+import { expect } from "chai";
+import lint from "mocha-eslint";
 
 describe( "testing idiots card game", function(){
 	describe("spec file", function () {
