@@ -1,45 +1,92 @@
 
+import _ from "lodash";
 
-
-/*realPlayer object
+/*realPlayer constructor
     hand: [3]
     face-up: [3]
     face-down: [3]
     playCard: [cards] //set of selected cards
 */
 
-/*botPlayer object
-    //inherits realPlayer
-    //TODO Before start: Possible to change face up cards with hand cards [strategy: 2's, 10's and high cards face up]
-    playCard: f(gamePhase=[0,1],
-                disgardStack.top=card,
-                drawStack=[cards]){
-        
-        IF gamePhase===0        //start: first card played
-            IF face-up has a 3 OR hand has a 3      //first with a three face up plays it; if there are none, the first with a three in hand plays it
-                select this card
-            //TODO If there aren't any three's, the same is done for fours, and so on
-        ELSE IF gamePhase>0     //from second card:
-            IF hand has any cardvalue >= disgardStack.top OR face-up has any cardvalue >= disgardStack.top      //play a card that is equal or higher that disgard
-                select these cards
-        
-            IF hand has any 2's OR face-up has any 2's
-                select these cards
-        
-            IF no selected cards        //if your hand is empty and your face up is empty
-                select at random card from face-down        //you must play a face down card at random
-        
-        IF no selected cards
-            IF gamePhase===0
-                return 0
-            ELSE IF gamePhase>0     //if you cannot play a card you must take the discard pile in hand
-                take up disgardStack
-        ELSE IF !empty game.drawstack       //if the draw pile is not empty
-            draw card from game draw.stack  //you take a card untill your hand has 3 cards
+function waitForPlayer() {
+	throw "Not yet implemented";
+}
 
-        return selected cards
-        }
-*/
+function Strictequal( N1, N2) {
+	return N1 === N2;
+}
+
+function greaterOrEqual( N1, N2) {
+	return N1 >= N2;
+}
+
+function select( cards, value, fun ) {
+	var s = _.remove(  cards, function( card ) {
+		return fun( card.value, value );
+	});
+	return s;
+}
+
+function selectCard( gamePhase, drawStack, value ) {
+	var selected;
+
+	if( gamePhase === 0 ) {   //start: first card played
+
+		selected = _.concat( select( this.faceUp, value, Strictequal ), select( this.hand, value, Strictequal ) ); //play a card that is equal to value
+        
+		if( typeof selected === "undefined" ) {
+			selected = 0;       //if no such card exists then pass
+		}
+	} else { //from second card
+		selected = _.concat(  select( this.faceUp, value, greaterOrEqual ), select( this.hand, value, greaterOrEqual ) ); //play a card that is equal or higher than value
+
+		if( typeof selected === "undefined" ) {
+			if( this.hand.length === 0 || this.faceUp.length === 0 ) {  //if your hand is empty and your face up is empty
+            
+				selected = 0;
+
+				var rand =_.floor(Math.random() * 3  );
+
+				selected = _.pullAt( this.faceDown, rand ); //you must play a face down card at random
+			} else {    //if you cannot play a card
+				this.hand.push( drawStack );    //you must take the discard pile in hand
+
+				drawStack.length = 0;
+			}
+		}
+	}
+}
+
+function takeSome( drawStack ) {
+	if( !this.real ){
+		if( drawStack.length !== 0 && this.hand.length < 3 ) {   //if the draw pile is not empty and your hand has les than 3 cards
+			this.hand.push( _.take( drawStack, 3 - this.hand.length ) );    //you take cards untill your hand has 3 cards
+			drawStack = _.drop( drawStack, 3 - this.hand.length );
+		}
+	}
+    
+}
+
+export function createPlayer( hand, faceUp, faceDown, real ) {
+	var playCard, takeCard;
+
+	if( real ){
+		playCard = waitForPlayer;
+	} else{
+		playCard = selectCard;
+
+		takeCard = takeSome;
+	}
+
+	return {
+		real,
+		hand,
+		faceUp,
+		faceDown,
+		playCard,
+		takeCard
+	};
+}
 
 /*Card object
     value: INT

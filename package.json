@@ -26,5 +26,8 @@
     "build": "parcel build",
     "test": "mocha"
   },
-  "browserslist": "> 0.5%, last 2 versions, Firefox ESR, not dead"
+  "browserslist": "> 0.5%, last 2 versions, Firefox ESR, not dead",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
 }
