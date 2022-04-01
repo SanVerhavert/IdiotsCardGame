@@ -18,6 +18,7 @@
         "linebreak-style": [ "error", "windows" ],
         "quotes": [ "error", "double" ],
         "semi": [ "error", "always" ],
+        "no-mixed-spaces-and-tabs": ["error", "smart-tabs"], //enforce the use of only tabs (and no spaces), unless spaces are used for alignment
         "block-spacing": [ "error", "always" ], // enforce spaces in blocks, i.e. within brackets {}
         "space-before-blocks": "error", // enforce space before blocjks, i.e. before brackets {}
         "space-before-function-paren": [ "error", "never" ], // enforce no space between function (name) and parentheses
