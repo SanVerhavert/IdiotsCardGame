@@ -14,10 +14,15 @@
     },
     "plugins": [ "import" ],
     "rules": {
-        "indent": ["error", "tab"],
-        "linebreak-style": ["error", "windows"],
-        "quotes": ["error", "double"],
-        "semi": ["error", "always"],
-        "import/no-commonjs": "error"
+        "indent": [ "error", "tab" ],
+        "linebreak-style": [ "error", "windows" ],
+        "quotes": [ "error", "double" ],
+        "semi": [ "error", "always" ],
+        "block-spacing": [ "error", "always" ], // enforce spaces in blocks, i.e. within brackets {}
+        "space-before-blocks": "error", // enforce space before blocjks, i.e. before brackets {}
+        "space-before-function-paren": [ "error", "never" ], // enforce no space between function (name) and parentheses
+        "space-in-parens": [ "error", "always" ], // enforce space after opening and before closing parentheses
+        "space-infix-ops": [ "error" ], // enforce spaces before and after operators
+        "import/no-commonjs": "error" // enforce ES6 style import/export
     }
 }
