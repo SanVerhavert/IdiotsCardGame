@@ -12,18 +12,18 @@ function waitForPlayer() {
 	throw "Not yet implemented";
 }
 
-function Strictequal( N1, N2) {
+function Strictequal( N1, N2 ) {
 	return N1 === N2;
 }
 
-function greaterOrEqual( N1, N2) {
+function greaterOrEqual( N1, N2 ) {
 	return N1 >= N2;
 }
 
 function select( cards, value, fun ) {
 	var s = _.remove(  cards, function( card ) {
 		return fun( card.value, value );
-	});
+	} );
 	return s;
 }
 
@@ -45,7 +45,7 @@ function selectCard( gamePhase, drawStack, value ) {
             
 				selected = 0;
 
-				var rand =_.floor(Math.random() * 3  );
+				var rand = _.floor( Math.random() * 3  );
 
 				selected = _.pullAt( this.faceDown, rand ); //you must play a face down card at random
 			} else {    //if you cannot play a card
@@ -58,7 +58,7 @@ function selectCard( gamePhase, drawStack, value ) {
 }
 
 function takeSome( drawStack ) {
-	if( !this.real ){
+	if( !this.real ) {
 		if( drawStack.length !== 0 && this.hand.length < 3 ) {   //if the draw pile is not empty and your hand has les than 3 cards
 			this.hand.push( _.take( drawStack, 3 - this.hand.length ) );    //you take cards untill your hand has 3 cards
 			drawStack = _.drop( drawStack, 3 - this.hand.length );
@@ -70,7 +70,7 @@ function takeSome( drawStack ) {
 export function createPlayer( hand, faceUp, faceDown, real ) {
 	var playCard, takeCard;
 
-	if( real ){
+	if( real ) {
 		playCard = waitForPlayer;
 	} else{
 		playCard = selectCard;
