@@ -1,6 +1,6 @@
 # Ignore file for eslint
 
- # node modulesand related
+# node modules and related
 node_modules/
 package-lock.json
 
