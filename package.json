@@ -24,8 +24,8 @@
     "start": "parcel",
     "lint": "eslint .",
     "lintFix": "eslint --fix .",
-    "build": "parcel build",
-    "test": "mocha"
+    "test": "mocha",
+    "build": "parcel build"
   },
   "browserslist": "> 0.5%, last 2 versions, Firefox ESR, not dead"
 }
