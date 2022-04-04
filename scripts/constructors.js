@@ -57,25 +57,20 @@ function selectCard( gamePhase, drawStack, value ) {
 	}
 }
 
-function takeSome( drawStack ) {
-	if( !this.real ) {
-		if( drawStack.length !== 0 && this.hand.length < 3 ) {   //if the draw pile is not empty and your hand has les than 3 cards
-			this.hand.push( _.take( drawStack, 3 - this.hand.length ) );    //you take cards untill your hand has 3 cards
-			drawStack = _.drop( drawStack, 3 - this.hand.length );
-		}
+function takeCard( drawStack ) {
+	if( drawStack.length !== 0 && this.hand.length < 3 ) {   //if the draw pile is not empty and your hand has les than 3 cards
+		this.hand.push( _.take( drawStack, 3 - this.hand.length ) );    //you take cards untill your hand has 3 cards
+		drawStack = _.drop( drawStack, 3 - this.hand.length );
 	}
-    
 }
 
 export function createPlayer( hand, faceUp, faceDown, real ) {
-	var playCard, takeCard;
+	var playCard;
 
 	if( real ) {
 		playCard = waitForPlayer;
 	} else{
 		playCard = selectCard;
-
-		takeCard = takeSome;
 	}
 
 	return {
