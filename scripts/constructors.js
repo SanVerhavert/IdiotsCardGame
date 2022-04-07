@@ -1,11 +1,10 @@
 
 import _ from "lodash";
 
-/*realPlayer constructor
-    hand: [3]
-    face-up: [3]
-    face-down: [3]
-    playCard: [cards] //set of selected cards
+/* function waitForPlayer
+	A function waiting for player input
+
+	TODO
 */
 
 function waitForPlayer() {
@@ -20,6 +19,16 @@ function greaterOrEqual( N1, N2 ) {
 	return N1 >= N2;
 }
 
+/* function select
+	Selecting 0 one or more card from a set of given cards against dependent on a criterion (fun)
+
+	@Param cards: array of card objects to select from
+	@Param value: the cardvalue to select
+	@Param fun: a function returning truthy or falsy dependent on a criterion
+
+	@return The selected cards if any
+*/
+
 function select( cards, value, fun ) {
 	var s = _.remove(  cards, function( card ) {
 		return fun( card.value, value );
@@ -27,7 +36,25 @@ function select( cards, value, fun ) {
 	return s;
 }
 
-function selectCard( gamePhase, drawStack, value ) {
+/* function selectCard
+	At the start of the game (gamePhase = 0): If player has a card in hand or faceUp that is
+	equal to ´@Param value´ pick and return it.
+	Not at start of game (gamePhase = 1): Take cards from your hand or faceUp that are equal
+	or higer than the top card on the ´@Param disgardStack´. If the ´@Param disgardStack´ is
+	empty, select the lowest card. If your hand and faceUp is empty, play a random card from
+	faceDown. If you cannot select a card, take the disgardStack. return
+	the selected card.
+
+	@Param gamePhase: the phase the game is in; 0 at start of game, 1 not at start of game
+	@Param drawStack: the stack to draw cards from
+	@Param disgardStack; the stack of played cards
+	@Param value: the value of the top card on the disgard stack; 0 if disgard stack is empty(?)
+
+	@Return Array of selected card and disgardStack
+
+	@SideEffects If a card is selected the hand, faceUp or faceDown is updated respectively
+*/
+function selectCard( gamePhase, disgardStack, value = 0 ) {
 	var selected;
 
 	if( gamePhase === 0 ) {   //start: first card played
@@ -38,32 +65,75 @@ function selectCard( gamePhase, drawStack, value ) {
 			selected = 0;       //if no such card exists then pass
 		}
 	} else { //from second card
-		selected = _.concat(  select( this.faceUp, value, greaterOrEqual ), select( this.hand, value, greaterOrEqual ) ); //play a card that is equal or higher than value
+		if( disgardStack.length > 0 ){ //if there is a card in the disgardStack
+			selected = _.concat(  select( this.faceUp, _.last( disgardStack ), greaterOrEqual ), select( this.hand, _.last( disgardStack ), greaterOrEqual ) ); //play a card that is equal or higher than the top card in disgardStack
 
-		if( typeof selected === "undefined" ) {
-			if( this.hand.length === 0 || this.faceUp.length === 0 ) {  //if your hand is empty and your face up is empty
-            
-				selected = 0;
-
-				var rand = _.floor( Math.random() * 3  );
-
-				selected = _.pullAt( this.faceDown, rand ); //you must play a face down card at random
-			} else {    //if you cannot play a card
-				this.hand.push( drawStack );    //you must take the discard pile in hand
-
-				drawStack.length = 0;
+			if( typeof selected === "undefined" ) {
+				if( this.hand.length === 0 || this.faceUp.length === 0 ) {  //if your hand is empty and your face up is empty
+				
+					selected = 0;
+	
+					var rand = _.floor( Math.random() * 3  );
+	
+					selected = _.pullAt( this.faceDown, rand ); //you must play a face down card at random
+				} else {    //if you cannot play a card
+					this.hand.push( disgardStack );    //you must take the discard pile in hand
+	
+					disgardStack.length = 0;
+				}
 			}
+		
+		} else {	//if disgardStack is empty select the lowest card
+			selected = _.sortBy( _.concat(  this.faceUp, this.hand ), function(c) {
+				return c.value;
+			} ).shift();
+
+			_.remove( this.faceUp, function( c ) {
+				return c.value === selected.value;
+			} );
+			_.remove( this.hand, function( c ) {
+				return c.value === selected.value;
+			} );
 		}
 	}
+	return [ selected, disgardStack ];
 }
 
+/* function takeCard
+	takes as much cards from the ´@Param drawStack´ that are missing from the hand them to the
+	hand.
+	
+	@Param drawStack: the card stack to draw from
+
+	@return returns the (updated) drawStack
+
+	@sideEffect updated the hand with the drawn cards if any
+*/
 function takeCard( drawStack ) {
-	if( drawStack.length !== 0 && this.hand.length < 3 ) {   //if the draw pile is not empty and your hand has les than 3 cards
-		this.hand.push( _.take( drawStack, 3 - this.hand.length ) );    //you take cards untill your hand has 3 cards
-		drawStack = _.drop( drawStack, 3 - this.hand.length );
+	if( drawStack.length !== 0 && this.hand.length < 3 ) {   //if the draw pile is not empty and your hand has less than 3 cards
+		var nToDrop = 3 - this.hand.length
+		this.hand = _.concat( this.hand, _.take( drawStack, 3 - this.hand.length ) ); //you take cards untill your hand has 3 cards
+		return _.drop( drawStack, nToDrop );
 	}
 }
 
+/* function createPlayer
+	A function to create a new player object. Does not preform input checks.
+
+	@Param hand: a vector of 3 card objects
+	@Param faceUp: a vector of 3 card objects
+	@Param faceDown: a vector of 3 card objects
+	@Param real: boolean indicating if we want to make a real player or not
+
+	@Return returns an object with 
+		@Property real: boolean indicating if the object is a real player or not
+		@Property hand: a vector of 3 card objects
+		@Property faceUp: a vector of 3 card objects
+		@Property faceDown: a vector of 3 card objects
+		@Method playCard: function waitForPlayer if real is truthy or selectCard if real is falsy
+		@Method takeCard: function takeCard
+		
+*/
 export function createPlayer( hand, faceUp, faceDown, real ) {
 	var playCard;
 
@@ -82,12 +152,6 @@ export function createPlayer( hand, faceUp, faceDown, real ) {
 		takeCard
 	};
 }
-
-/*Card object
-    value: INT
-    face: char
-    img: filename
-*/
 
 /*Game object
     gamePhase: [0, 1] //0==start; 1==!start
