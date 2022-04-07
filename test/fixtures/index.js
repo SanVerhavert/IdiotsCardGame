@@ -1,7 +1,7 @@
 
-import { realPlayer } from "./realPlayer.js";
-import { botPlayer } from "./botPlayer.js";
+import { Players,
+	Cards } from "./Players.js";
 
 
-export { realPlayer,
-	botPlayer };
+export { Players,
+	Cards };
