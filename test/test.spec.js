@@ -1,5 +1,4 @@
 
-import chai from "chai";
 import { expect } from "chai";
 import lint from "mocha-eslint";
 import _ from "lodash";
@@ -36,8 +35,9 @@ describe( "testing idiots card game", function() {
 				expect( typeof( botPlayer.playCard ) ).to.equal( "function" ); //object includes playCard function
 				expect( typeof( botPlayer.takeCard ) ).to.equal( "function" ); //object includes takeCard function
 			} );
-			describe( "realPlayer", function() {it.skip( "should wait for input if method playCard", function() {
-					//skiped because implementation and therefore output is not clear yet
+			describe( "realPlayer", function() {
+				it.skip( "should wait for input if method playCard", function() {
+				//skiped because implementation and therefore output is not clear yet
 				} );
 				it( "should update hand if method takeCard and there is still a card in draw stack", function() {
 					var realPlayer = createPlayer( Cards.Hand, Cards.FaceUp, Cards.FaceDown, true );
@@ -46,7 +46,7 @@ describe( "testing idiots card game", function() {
 					dStack = drawStack = _.sampleSize( Deck, 5 );					
 					
 					realPlayer.hand = _.sampleSize( realPlayer.hand, 2 );
-					var playerHand = _.filter( realPlayer.hand, function(c) {
+					var playerHand = _.filter( realPlayer.hand, function( c ) {
 						return c;
 					} );
 
@@ -54,7 +54,7 @@ describe( "testing idiots card game", function() {
 					drawStack = realPlayer.takeCard( drawStack );
 					
 					expect( drawStack ).to.eql( _.drop( dStack, 1 ) ); //remaining 4 in drawStack as equal to last 4 in dStack
-					expect( realPlayer.hand).to.eql( _.concat( playerHand, dStack[0] ) ); //hand to include first of dStack
+					expect( realPlayer.hand ).to.eql( _.concat( playerHand, dStack[0] ) ); //hand to include first of dStack
 
 					playerHand = realPlayer.hand = _.sampleSize( realPlayer.hand );
 
@@ -69,27 +69,75 @@ describe( "testing idiots card game", function() {
 					//after needing to take 3 cards (but only 2 remaining)
 					drawStack = realPlayer.takeCard( drawStack );
 
-					expect( drawStack).to.be.empty //check that drawStack is empty
+					expect( drawStack ).to.be.empty; //check that drawStack is empty
 					expect( realPlayer.hand ).to.eql( _.drop( dStack, 3 ) ); //check that had includes last 2 of dStack
 				} );
-				it.skip( "should do nothing if method takeCard and there is no card in draw stack", function() {
+				it( "should do nothing if method takeCard and there is no card in draw stack", function() {
+					var realPlayer = createPlayer( Cards.Hand, Cards.FaceUp, Cards.FaceDown, true );
 
+					const playerHand = realPlayer.hand = _.sampleSize( realPlayer.hand );
+
+					realPlayer.takeCard( [] );
+
+					expect( realPlayer.hand ).to.eql( playerHand ); // hand to be the same as before
 				} );
 			} );
-			describe.skip( "botPlayer", function() {
-				var botPlayer = createPlayer( Cards.Hand, Cards.FaceUp, Cards.FaceDown, false );
-
-				it( "should return correct card if method playCard at start of game", function() {
+			describe( "botPlayer", function() {
+				var botPlayer;
+				
+				beforeEach( function() {
+					botPlayer = createPlayer( Cards.Hand, Cards.FaceUp, Cards.FaceDown, false );
+				});
+				it( "should return correct card (and empty disgardStack) if method playCard at start of game", function() {
+					expect( botPlayer.playCard( 0, [], 3 ) ).to.eql( Cards.expectStart ); //shoudl return correct
+					expect( botPlayer.hand ).to.eql( Cards.handStart ); //hand contains the two expected cards
+				} );
+				it.skip( "should return correct card and disgardStack if method playCard and can play card [not start of game]", function() {
 					
 				} );
-				it( "should return correct card or take one if method playCard [not start of game]", function() {
-					//several stacks shuffels
-				} );
-				it( "should update hand if method takeCard and there is still a card in draw stack", function() {
+				it.skip( "should return undefined card, take disgardStack if any and return empty disgardStack, if method playCard and cannot play card [not start of game]", function() {
 
+				});
+				it( "should update hand if method takeCard and there is still a card in draw stack", function() {
+					var dStack, drawStack;
+
+					dStack = drawStack = _.sampleSize( Deck, 5 );					
+					
+					botPlayer.hand = _.sampleSize( botPlayer.hand, 2 );
+					var playerHand = _.filter( botPlayer.hand, function( c ) {
+						return c;
+					} );
+
+					//after needing to take 1 card
+					drawStack = botPlayer.takeCard( drawStack );
+					
+					expect( drawStack ).to.eql( _.drop( dStack, 1 ) ); //remaining 4 in drawStack as equal to last 4 in dStack
+					expect( botPlayer.hand ).to.eql( _.concat( playerHand, dStack[0] ) ); //hand to include first of dStack
+
+					playerHand = botPlayer.hand = _.sampleSize( botPlayer.hand );
+
+					//after needing to take 2 cards
+					drawStack = botPlayer.takeCard( drawStack );
+					
+					expect( drawStack ).to.eql( _.drop( dStack, 3 ) ); // remaining 2 in drawStack to eaqual last 2 in dStack
+					expect( botPlayer.hand ).to.eql( _.concat( playerHand, _.slice( dStack, 1, 3 ) ) ); //check hand to include 2 and 3 of dStack
+
+					botPlayer.hand = [];
+
+					//after needing to take 3 cards (but only 2 remaining)
+					drawStack = botPlayer.takeCard( drawStack );
+
+					expect( drawStack ).to.be.empty; //check that drawStack is empty
+					expect( botPlayer.hand ).to.eql( _.drop( dStack, 3 ) ); //check that had includes last 2 of dStack
+
+					//autoplay card if it is the same card as you already played
 				} );
 				it( "should do nothing if method takeCard and there is no card in draw stack", function() {
+					const playerHand = botPlayer.hand = _.sampleSize( botPlayer.hand );
 
+					botPlayer.takeCard( [] );
+
+					expect( botPlayer.hand ).to.eql( playerHand ); // hand to be the same as before
 				} );
 			} );
 		} );
