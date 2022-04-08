@@ -36,7 +36,7 @@ export const Cards = {
 	],
 	FaceDown: [
 		{ 
-			value: 2,
+			value: 3,
 			face: "S",
 			img: "path/to/file"
 		},
@@ -48,6 +48,28 @@ export const Cards = {
 		{
 			value: 7,
 			face: "S",
+			img: "path/to/file"
+		}
+	],
+	expectStart: [
+		[
+			{
+				value: 3,
+				face: "D",
+				img: "path/to/file"
+			}
+		],
+		[]
+	],
+	handStart: [
+		{
+			value: 4,
+			face: "H",
+			img: "path/to/file"
+		},
+		{
+			value: 10,
+			face: "H",
 			img: "path/to/file"
 		}
 	]
