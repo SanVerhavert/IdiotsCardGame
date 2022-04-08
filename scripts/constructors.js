@@ -65,7 +65,7 @@ function selectCard( gamePhase, disgardStack, value = 0 ) {
 			selected = 0;       //if no such card exists then pass
 		}
 	} else { //from second card
-		if( disgardStack.length > 0 ){ //if there is a card in the disgardStack
+		if( disgardStack.length > 0 ) { //if there is a card in the disgardStack
 			selected = _.concat(  select( this.faceUp, _.last( disgardStack ), greaterOrEqual ), select( this.hand, _.last( disgardStack ), greaterOrEqual ) ); //play a card that is equal or higher than the top card in disgardStack
 
 			if( typeof selected === "undefined" ) {
@@ -84,7 +84,7 @@ function selectCard( gamePhase, disgardStack, value = 0 ) {
 			}
 		
 		} else {	//if disgardStack is empty select the lowest card
-			selected = _.sortBy( _.concat(  this.faceUp, this.hand ), function(c) {
+			selected = _.sortBy( _.concat(  this.faceUp, this.hand ), function( c ) {
 				return c.value;
 			} ).shift();
 
@@ -101,20 +101,39 @@ function selectCard( gamePhase, disgardStack, value = 0 ) {
 
 /* function takeCard
 	takes as much cards from the ´@Param drawStack´ that are missing from the hand them to the
-	hand.
+	hand. If the drawn card equals that of the last played card, then play it
 	
 	@Param drawStack: the card stack to draw from
+	@Param disgardStack: the card stack containing the played cards
 
-	@return returns the (updated) drawStack
+	@return returns the (updated) drawStack and disgardStacj
 
 	@sideEffect updated the hand with the drawn cards if any
 */
-function takeCard( drawStack ) {
+function takeCard( drawStack, disgardStack ) {
 	if( drawStack.length !== 0 && this.hand.length < 3 ) {   //if the draw pile is not empty and your hand has less than 3 cards
-		var nToDrop = 3 - this.hand.length
-		this.hand = _.concat( this.hand, _.take( drawStack, 3 - this.hand.length ) ); //you take cards untill your hand has 3 cards
-		return _.drop( drawStack, nToDrop );
+		var nToDrop = 3 - this.hand.length;
+		
+		var addCards = _.take( drawStack, 3 - this.hand.length ); //you take cards untill your hand has 3 cards
+		
+		//If the drawn card equals that of the last played card, then play it
+		if( typeof disgardStack !== "undefined" && disgardStack.length !== 0 ) {
+			disgardStack = _.concat( disgardStack, 
+				_.remove( addCards, function( c ) {
+					return c.value === _.last( disgardStack ).value;
+				} )
+			);
+		}
+		
+
+		this.hand = _.concat( this.hand, addCards ); 
+
+		drawStack =  _.drop( drawStack, nToDrop );
 	}
+	
+	
+	return [ drawStack, disgardStack ];
+	
 }
 
 /* function createPlayer
