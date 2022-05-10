@@ -50,6 +50,32 @@ export const Cards = {
 			img: "path/to/file"
 		}
 	],
+	Autoplay: {
+		drawStack: [
+			{ 
+				value: 2,
+				face: "H",
+				img: "path/to/file"
+			},
+			{ 
+				value: 14,
+				face: "C",
+				img: "path/to/file"
+			},
+			{
+				value: 3,
+				face: "D",
+				img: "path/to/file"
+			}
+		],
+		disgardStack: [
+			{ 
+				value: 2,
+				face: "D",
+				img: "path/to/file"
+			}
+		]
+	},
 	expectStart: {
 		selected: [
 			{

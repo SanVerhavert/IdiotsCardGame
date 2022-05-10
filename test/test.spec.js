@@ -107,7 +107,7 @@ describe( "testing idiots card game", function() {
 				var botPlayer;
 				
 				beforeEach( function() {
-					botPlayer = createPlayer( Cards.Hand, Cards.FaceUp, Cards.FaceDown, false );
+					botPlayer = createPlayer( _.cloneDeep(Cards.Hand), _.cloneDeep(Cards.FaceUp), _.cloneDeep(Cards.FaceDown), false ); //_.cloneDeep is needed for later test to work. Some test mutate Cards object
 				} );
 				it( "should return correct card (and empty disgardStack) if method playCard at start of game", function() {
 					expect( botPlayer.playCard( 0, [], 3 ) ).to.eql( Cards.expectStart ); //shoudl return correct
@@ -159,7 +159,7 @@ describe( "testing idiots card game", function() {
 
 					drawStack = result.drawStack;
 					
-					expect( result.drawStack ).to.eql( _.drop( dStack, 3 ) ); // remaining 2 in drawStack to eaqual last 2 in dStack
+					expect( result.drawStack ).to.eql( _.drop( dStack, 3 ) ); // remaining 2 in drawStack to equal last 2 in dStack
 					expect( result.disgardStack ).to.eql( disgardStack );
 					expect( botPlayer.hand ).to.eql( _.concat( playerHand, _.slice( dStack, 1, 3 ) ) ); //check hand to include 2 and 3 of dStack
 
@@ -172,6 +172,16 @@ describe( "testing idiots card game", function() {
 					expect( botPlayer.hand ).to.eql( _.drop( dStack, 3 ) ); //check that had includes last 2 of dStack
 
 					//autoplay card if it is the same card as you already played
+					botPlayer.hand = _.drop( Cards.Hand );
+
+					drawStack = Cards.Autoplay.drawStack;
+					disgardStack = Cards.Autoplay.disgardStack;
+
+					result = botPlayer.takeCard( drawStack, disgardStack );
+					
+					expect( result.drawStack ).to.eql( _.drop( drawStack, 2 ) ); //drawStack should only have last card of drawStack
+					expect( result.disgardStack ).to.eql( _.concat( disgardStack, _.take( drawStack ) ) ); //first card of drawStack should be added to disgardStack
+					expect( botPlayer.hand ).to.eql( _.concat( _.drop( Cards.Hand ), drawStack[1] ) ); //second card of drawStack should be added to hand
 				} );
 				it( "should do nothing if method takeCard and there is no card in draw stack", function() {
 					const playerHand = botPlayer.hand = _.sampleSize( botPlayer.hand );

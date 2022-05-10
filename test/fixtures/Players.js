@@ -1,4 +1,6 @@
 
+import { Cards } from "./Cards.js";
+
 export const Players = {
 	realPlayer: {
 		real: true,
