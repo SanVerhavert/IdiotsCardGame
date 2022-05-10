@@ -50,7 +50,7 @@ function select( cards, value, fun ) {
 	@Param disgardStack; the stack of played cards
 	@Param value: the value of the top card on the disgard stack; 0 if disgard stack is empty(?)
 
-	@Return Array of selected card and disgardStack
+	@Return object with property selected card and disgardStack
 
 	@SideEffects If a card is selected the hand, faceUp or faceDown is updated respectively
 */
@@ -96,7 +96,7 @@ function selectCard( gamePhase, disgardStack, value = 0 ) {
 			} );
 		}
 	}
-	return [ selected, disgardStack ];
+	return {selected, disgardStack };
 }
 
 /* function takeCard
@@ -106,7 +106,7 @@ function selectCard( gamePhase, disgardStack, value = 0 ) {
 	@Param drawStack: the card stack to draw from
 	@Param disgardStack: the card stack containing the played cards
 
-	@return returns the (updated) drawStack and disgardStacj
+	@return returns an object with properties the (updated) drawStack and disgardStack
 
 	@sideEffect updated the hand with the drawn cards if any
 */
@@ -132,7 +132,7 @@ function takeCard( drawStack, disgardStack ) {
 	}
 	
 	
-	return [ drawStack, disgardStack ];
+	return { drawStack, disgardStack };
 	
 }
 

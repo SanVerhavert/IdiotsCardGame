@@ -51,7 +51,7 @@ describe( "testing idiots card game", function() {
 					} );
 
 					//after needing to take 1 card
-					drawStack = realPlayer.takeCard( drawStack, disgardStack )[0];
+					drawStack = realPlayer.takeCard( drawStack, disgardStack ).drawStack;
 					
 					expect( drawStack ).to.eql( _.drop( dStack, 1 ) ); //remaining 4 in drawStack as equal to last 4 in dStack
 					expect( realPlayer.hand ).to.eql( _.concat( playerHand, dStack[0] ) ); //hand to include first of dStack
@@ -59,7 +59,7 @@ describe( "testing idiots card game", function() {
 					playerHand = realPlayer.hand = _.sampleSize( realPlayer.hand );
 
 					//after needing to take 2 cards
-					drawStack = realPlayer.takeCard( drawStack, disgardStack )[0];
+					drawStack = realPlayer.takeCard( drawStack, disgardStack ).drawStack;
 					
 					expect( drawStack ).to.eql( _.drop( dStack, 3 ) ); // remaining 2 in drawStack to eaqual last 2 in dStack
 					expect( realPlayer.hand ).to.eql( _.concat( playerHand, _.slice( dStack, 1, 3 ) ) ); //check hand to include 2 and 3 of dStack
@@ -67,7 +67,7 @@ describe( "testing idiots card game", function() {
 					realPlayer.hand = [];
 
 					//after needing to take 3 cards (but only 2 remaining)
-					drawStack = realPlayer.takeCard( drawStack, disgardStack )[0];
+					drawStack = realPlayer.takeCard( drawStack, disgardStack ).drawStack;
 
 					expect( drawStack ).to.be.empty; //check that drawStack is empty
 					expect( realPlayer.hand ).to.eql( _.drop( dStack, 3 ) ); //check that had includes last 2 of dStack
@@ -85,9 +85,9 @@ describe( "testing idiots card game", function() {
 					
 					var result = realPlayer.takeCard( drawStack, disgardStack );
 
-					drawStack = result[0];
+					drawStack = result.drawStack;
 
-					disgardStack = result[1];
+					disgardStack = result.disgardStack;
 
 					expect( drawStack.length ).to.equal( 0 ); //check that drawStack is empty
 					expect( disgardStack.length ).to.equal( 2 ); //check that there are two elements in disgardStack
@@ -146,9 +146,10 @@ describe( "testing idiots card game", function() {
 					//after needing to take 1 card
 					var result = botPlayer.takeCard( drawStack, disgardStack );
 
-					drawStack = result[0];
+					drawStack = result.drawStack;
 					
-					expect( result ).to.eql( [ _.drop( dStack, 1 ), disgardStack ] ); //remaining 4 in drawStack as equal to last 4 in dStack
+					expect( result.drawStack ).to.eql( _.drop( dStack, 1 ) ); //remaining 4 in drawStack as equal to last 4 in dStack
+					expect( result.disgardStack ).to.eql( disgardStack );
 					expect( botPlayer.hand ).to.eql( _.concat( playerHand, dStack[0] ) ); //hand to include first of dStack
 
 					playerHand = botPlayer.hand = _.sampleSize( botPlayer.hand );
@@ -156,17 +157,18 @@ describe( "testing idiots card game", function() {
 					//after needing to take 2 cards
 					result = botPlayer.takeCard( drawStack, disgardStack );
 
-					drawStack = result[0];
+					drawStack = result.drawStack;
 					
-					expect( result ).to.eql( [ _.drop( dStack, 3 ), disgardStack] ); // remaining 2 in drawStack to eaqual last 2 in dStack
+					expect( result.drawStack ).to.eql( _.drop( dStack, 3 ) ); // remaining 2 in drawStack to eaqual last 2 in dStack
+					expect( result.disgardStack ).to.eql( disgardStack );
 					expect( botPlayer.hand ).to.eql( _.concat( playerHand, _.slice( dStack, 1, 3 ) ) ); //check hand to include 2 and 3 of dStack
 
 					botPlayer.hand = [];
 
 					//after needing to take 3 cards (but only 2 remaining)
-					result = drawStack = botPlayer.takeCard( drawStack, disgardStack );
+					drawStack = botPlayer.takeCard( drawStack, disgardStack ).drawStack;
 
-					expect( result ).to.eql( [[],[]] ); //check that drawStack is empty
+					expect( drawStack ).to.be.empty; //check that drawStack is empty
 					expect( botPlayer.hand ).to.eql( _.drop( dStack, 3 ) ); //check that had includes last 2 of dStack
 
 					//autoplay card if it is the same card as you already played

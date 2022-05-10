@@ -51,16 +51,16 @@ export const Cards = {
 			img: "path/to/file"
 		}
 	],
-	expectStart: [
-		[
+	expectStart: {
+		selected: [
 			{
 				value: 3,
 				face: "D",
 				img: "path/to/file"
 			}
 		],
-		[]
-	],
+		disgardStack: []
+	},
 	handStart: [
 		{
 			value: 4,
