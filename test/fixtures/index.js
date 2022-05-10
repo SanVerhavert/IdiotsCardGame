@@ -1,6 +1,6 @@
 
-import { Players,
-	Cards } from "./Players.js";
+import { Players } from "./Players.js";
+import { Cards } from "./Cards.js";
 
 
 export { Players,
