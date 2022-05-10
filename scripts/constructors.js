@@ -112,28 +112,31 @@ function selectCard( gamePhase, disgardStack, value = 0 ) {
 */
 function takeCard( drawStack, disgardStack ) {
 	if( drawStack.length !== 0 && this.hand.length < 3 ) {   //if the draw pile is not empty and your hand has less than 3 cards
+		var addCards;
 		var nToDrop = 3 - this.hand.length;
+
+		while ( nToDrop !== 0 && drawStack.length !== 0 ) { //as long as I need to draw cards and the drawStack is not empty
+			addCards = _.take( drawStack, 3 - this.hand.length ); //you take cards untill your hand has 3 cards
+
+			drawStack =  _.drop( drawStack, addCards.length );
 		
-		var addCards = _.take( drawStack, 3 - this.hand.length ); //you take cards untill your hand has 3 cards
-		
-		//If the drawn card equals that of the last played card, then play it
-		if( typeof disgardStack !== "undefined" && disgardStack.length !== 0 ) {
-			disgardStack = _.concat( disgardStack, 
-				_.remove( addCards, function( c ) {
-					return c.value === _.last( disgardStack ).value;
-				} )
-			);
+			//If the drawn card equals that of the last played card, then play it
+			if( typeof disgardStack !== "undefined" && disgardStack.length !== 0 ) {
+				disgardStack = _.concat( disgardStack, 
+					_.remove( addCards, function( c ) {
+						return c.value === _.last( disgardStack ).value;
+					} )
+				);
+			}
+
+			this.hand = _.concat( this.hand, addCards ); 
+
+			nToDrop = 3 - this.hand.length;
+			
 		}
-		
-
-		this.hand = _.concat( this.hand, addCards ); 
-
-		drawStack =  _.drop( drawStack, nToDrop );
 	}
 	
-	
 	return { drawStack, disgardStack };
-	
 }
 
 /* function createPlayer
